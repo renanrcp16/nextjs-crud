@@ -3,17 +3,28 @@ import CustomerTable from "../components/CustomerTable";
 import CustomerForm from "../components/CustomerForm";
 import Layout from "../components/Layout";
 import Customer from "../interfaces/Customer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CustomerRepository from "../interfaces/CustomerRepository";
+import CollectionCustomer from "../firebase/db/CollectionCustomer";
 
 export default function Home() {
+	const repo: CustomerRepository = new CollectionCustomer()
+	
 	const [visible, setVisible] = useState<'table' | 'form'>('table')
+	const [data, setData] = useState<Customer[]>([])
 	const [customer, setCustomer] = useState<Customer>({id: '', name: '', age: 0})
 
-	const data = [
-		{ id: 'psng0s9ef-nfans', name: 'João', age: 18 },
-		{ id: 'ja-f9j-ajjlf3kd', name: 'Maria', age: 22 },
-		{ id: '9ash9h-h39udhka', name: 'José', age: 30 },
-	]
+	useEffect(() => {
+		const tempData = repo.getAll().then(setData)
+		setData(tempData)
+		
+	}, [])
+
+	// const data: Customer[] = [
+	// 	{ id: 'psng0s9ef-nfans', name: 'João', age: 18 },
+	// 	{ id: 'ja-f9j-ajjlf3kd', name: 'Maria', age: 22 },
+	// 	{ id: '9ash9h-h39udhka', name: 'José', age: 30 },
+	// ]
 
 	const selectedCustomer = (customer: Customer) => {
 		setCustomer(customer)
@@ -25,6 +36,7 @@ export default function Home() {
 	}
 
 	function saveCustomer(customer: Customer) {
+		repo.save(customer)
 		setVisible('table')
 	}
 
