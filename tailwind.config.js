@@ -8,4 +8,9 @@ module.exports = {
 		extend: {},
 	},
 	plugins: [],
+	safelist: [
+		{
+			pattern: /(bg|to|from)-(green|blue|gray)-(400|700)/,
+		},
+	],
 }
